@@ -1,0 +1,2998 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    101357,       2990]
+NotebookOptionsPosition[     92912,       2879]
+NotebookOutlinePosition[     93247,       2894]
+CellTagsIndexPosition[     93204,       2891]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+  "This", " ", "module", " ", "creates", " ", "the", " ", "subspace", " ", 
+   "Z", " ", "with", " ", "the", " ", "number", " ", "of", " ", "group", " ", 
+   "element", " ", "of", " ", "the", " ", "group", " ", "Z_n", " ", "x", " ", 
+   "Z_m", " ", "as", " ", "the", " ", "input"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.797145269735677*^9, 3.797145277786916*^9}, {
+   3.7971453387751713`*^9, 3.797145364341733*^9}, 3.79714545514289*^9, {
+   3.797748901096518*^9, 
+   3.797748919877192*^9}},ExpressionUUID->"9d973961-2d7d-4a01-b233-\
+6e32139ce8a5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"MakeZ", "[", 
+    RowBox[{"n_", ",", "m_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"S", ",", "T", ",", "j1", ",", "j2", ",", "k1", ",", "k2"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"S", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"n", "-", "1"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"T", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"m", "-", "1"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"j1", ",", "k1"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j2", ",", "k2"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Mod", "[", 
+               RowBox[{
+                RowBox[{"j1", "+", "j2"}], ",", "n"}], "]"}], ",", 
+              RowBox[{"Mod", "[", 
+               RowBox[{
+                RowBox[{"k1", "+", "k2"}], ",", "m"}], "]"}]}], "}"}]}], 
+           "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"j1", ",", "0", ",", " ", 
+            RowBox[{
+             RowBox[{"Length", "[", "S", "]"}], "-", "1"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"j2", ",", "0", ",", " ", 
+            RowBox[{
+             RowBox[{"Length", "[", "S", "]"}], "-", "1"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k1", ",", "0", ",", " ", 
+            RowBox[{
+             RowBox[{"Length", "[", "T", "]"}], "-", "1"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k2", ",", "0", ",", " ", 
+            RowBox[{
+             RowBox[{"Length", "[", "T", "]"}], "-", "1"}]}], "}"}]}], "]"}], 
+        ",", "3"}], "]"}]}]}], "]"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "This", " ", "module", " ", "computes", " ", "all", " ", "possible", " ", 
+    "friendly", " ", "labeling", " ", "for", " ", "the", " ", "group", " ", 
+    "Z_n", " ", "x", " ", "Z_m"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"G", "[", 
+    RowBox[{"n_", ",", "m_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "R", ",", "W", ",", "i", ",", "k", ",", "u", ",", "P", ",", "L", ",", 
+       " ", "LP", ",", "LP1", ",", "P1", ",", "P2", ",", "P3", ",", "Q1", ",",
+        "Q2", ",", "Q3", ",", "F"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"<<", "Combinatorica`"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"W", "=", 
+       RowBox[{"SetPartitions", "[", 
+        RowBox[{"CartesianProduct", "[", 
+         RowBox[{
+          RowBox[{"Range", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"n", "-", "1"}]}], "]"}], ",", 
+          RowBox[{"Range", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"m", "-", "1"}]}], "]"}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"k", "=", "1"}], ",", 
+        RowBox[{"k", "\[LessEqual]", 
+         RowBox[{"Length", "[", "W", "]"}]}], ",", 
+        RowBox[{"k", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"P", "=", 
+          RowBox[{"W", "[", 
+           RowBox[{"[", "k", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"L", "[", 
+           RowBox[{"x_", ",", "P_"}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"j", ",", "l"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"j", "=", "1"}], ",", 
+              RowBox[{"j", "\[LessEqual]", 
+               RowBox[{"Length", "[", "P", "]"}]}], ",", 
+              RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"l", "=", 
+                RowBox[{"P", "[", 
+                 RowBox[{"[", "j", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{"MemberQ", "[", 
+                  RowBox[{
+                   RowBox[{"P", "[", 
+                    RowBox[{"[", "j", "]"}], "]"}], ",", "x"}], "]"}], ",", 
+                 RowBox[{"Return", "[", "j", "]"}], ","}], "]"}]}]}], "]"}]}],
+            "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"LP", "[", "x_", "]"}], ":=", 
+          RowBox[{"L", "[", 
+           RowBox[{"x", ",", "P"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"LP1", "[", "x_", "]"}], ":=", 
+          RowBox[{"Map", "[", 
+           RowBox[{"LP", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"x", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"x", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{"x", "[", 
+               RowBox[{"[", "3", "]"}], "]"}]}], "}"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"P1", "[", "x_", "]"}], ":=", 
+          RowBox[{"x", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"P2", "[", "x_", "]"}], ":=", 
+          RowBox[{"x", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"P3", "[", "x_", "]"}], ":=", 
+          RowBox[{"x", "[", 
+           RowBox[{"[", "3", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Q1", "[", 
+           RowBox[{"a_", ",", "b_", ",", "x_", ",", "P_"}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"w", ",", "v"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"w", "=", 
+              RowBox[{
+               RowBox[{"PositionIndex", "[", 
+                RowBox[{
+                 RowBox[{"AssociationMap", "[", "LP1", "]"}], "@", 
+                 RowBox[{"MakeZ", "[", 
+                  RowBox[{"a", ",", "b"}], "]"}]}], "]"}], "[", "x", "]"}]}], 
+             ";", "\[IndentingNewLine]", 
+             RowBox[{"v", "=", 
+              RowBox[{"Map", "[", 
+               RowBox[{"P1", ",", "w"}], "]"}]}], ";", 
+             RowBox[{"Return", "[", 
+              RowBox[{"DeleteDuplicates", "[", "v", "]"}], "]"}]}]}], "]"}]}],
+          ";", 
+         RowBox[{
+          RowBox[{"Q2", "[", 
+           RowBox[{"c_", ",", "d_", ",", "x_", ",", "P_"}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"w", ",", "v"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"w", "=", 
+              RowBox[{
+               RowBox[{"PositionIndex", "[", 
+                RowBox[{
+                 RowBox[{"AssociationMap", "[", "LP1", "]"}], "@", 
+                 RowBox[{"MakeZ", "[", 
+                  RowBox[{"c", ",", "d"}], "]"}]}], "]"}], "[", "x", "]"}]}], 
+             ";", "\[IndentingNewLine]", 
+             RowBox[{"v", "=", 
+              RowBox[{"Map", "[", 
+               RowBox[{"P2", ",", "w"}], "]"}]}], ";", 
+             RowBox[{"Return", "[", 
+              RowBox[{"DeleteDuplicates", "[", "v", "]"}], "]"}]}]}], "]"}]}],
+          ";", 
+         RowBox[{
+          RowBox[{"Q3", "[", 
+           RowBox[{"e_", ",", "f_", ",", "x_", ",", "P_"}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"w", ",", "v"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"w", "=", 
+              RowBox[{
+               RowBox[{"PositionIndex", "[", 
+                RowBox[{
+                 RowBox[{"AssociationMap", "[", "LP1", "]"}], "@", 
+                 RowBox[{"MakeZ", "[", 
+                  RowBox[{"e", ",", "f"}], "]"}]}], "]"}], "[", "x", "]"}]}], 
+             ";", "\[IndentingNewLine]", 
+             RowBox[{"v", "=", 
+              RowBox[{"Map", "[", 
+               RowBox[{"P3", ",", "w"}], "]"}]}], ";", 
+             RowBox[{"Return", "[", 
+              RowBox[{"DeleteDuplicates", "[", "v", "]"}], "]"}]}]}], "]"}]}],
+          ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"F", "[", 
+           RowBox[{"g_", ",", "h_", ",", "x_", ",", "P_"}], "]"}], ":=", 
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"ContainsExactly", "[", 
+               RowBox[{
+                RowBox[{"Q1", "[", 
+                 RowBox[{"g", ",", "h", ",", "x", ",", "P"}], "]"}], ",", 
+                RowBox[{
+                 RowBox[{"PositionIndex", "[", 
+                  RowBox[{
+                   RowBox[{"AssociationMap", "[", "LP", "]"}], "@", 
+                   RowBox[{"CartesianProduct", "[", 
+                    RowBox[{
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"n", "-", "1"}]}], "]"}], ",", 
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"m", "-", "1"}]}], "]"}]}], "]"}]}], "]"}], "[", 
+                 RowBox[{"P1", "[", "x", "]"}], "]"}]}], "]"}], ",", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"ContainsExactly", "[", 
+                 RowBox[{
+                  RowBox[{"Q2", "[", 
+                   RowBox[{"g", ",", "h", ",", " ", "x", ",", "P"}], "]"}], 
+                  ",", 
+                  RowBox[{
+                   RowBox[{"PositionIndex", "[", 
+                    RowBox[{
+                    RowBox[{"AssociationMap", "[", "LP", "]"}], "@", 
+                    RowBox[{"CartesianProduct", "[", 
+                    RowBox[{
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"n", "-", "1"}]}], "]"}], ",", 
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"m", "-", "1"}]}], "]"}]}], "]"}]}], "]"}], "[", 
+                   RowBox[{"P2", "[", "x", "]"}], "]"}]}], "]"}], ",", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"ContainsExactly", "[", 
+                   RowBox[{
+                    RowBox[{"Q3", "[", 
+                    RowBox[{"g", ",", "h", ",", "x", ",", "P"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PositionIndex", "[", 
+                    RowBox[{
+                    RowBox[{"AssociationMap", "[", "LP", "]"}], "@", 
+                    RowBox[{"CartesianProduct", "[", 
+                    RowBox[{
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"n", "-", "1"}]}], "]"}], ",", 
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"m", "-", "1"}]}], "]"}]}], "]"}]}], "]"}], "[", 
+                    RowBox[{"P3", "[", "x", "]"}], "]"}]}], "]"}], ",", " ", 
+                  RowBox[{"Return", "[", "1", "]"}], ",", 
+                  RowBox[{"Return", "[", "0", "]"}]}], "]"}], ",", 
+                RowBox[{"Return", "[", "0", "]"}]}], "]"}], ",", 
+              RowBox[{"Return", "[", "0", "]"}]}], "]"}]}], "]"}]}], ";", 
+         RowBox[{"R", "=", 
+          RowBox[{"DeleteDuplicates", "[", 
+           RowBox[{"Map", "[", 
+            RowBox[{"LP1", ",", 
+             RowBox[{"MakeZ", "[", 
+              RowBox[{"n", ",", "m"}], "]"}]}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"i", "=", "1"}], ",", 
+           RowBox[{"i", "\[LessEqual]", 
+            RowBox[{"Length", "[", "R", "]"}]}], ",", 
+           RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"u", "[", "i", "]"}], ":=", 
+            RowBox[{"F", "[", 
+             RowBox[{"n", ",", "m", ",", 
+              RowBox[{"R", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], ",", "P"}], "]"}]}]}], "]"}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"DeleteDuplicates", "[", 
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"u", "[", "i", "]"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i", ",", "1", ",", 
+                 RowBox[{"Length", "[", "R", "]"}], ",", "1"}], "}"}]}], 
+              "]"}], "]"}], "\[Equal]", 
+            RowBox[{"{", "1", "}"}]}], ",", 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<Friendly Labeling\>\"", ",", "P"}], "]"}], ","}], 
+          "]"}]}]}], "]"}]}]}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"G", "[", 
+  RowBox[{"2", ",", "2"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.797145487749866*^9, 3.797145532908271*^9}, {
+  3.797145582844551*^9, 3.7971455864781313`*^9}, {3.797145693587124*^9, 
+  3.797145698711792*^9}, {3.797145735914769*^9, 3.797145748007483*^9}, {
+  3.797145780716873*^9, 3.7971458202424917`*^9}, {3.797145887381514*^9, 
+  3.797145929331974*^9}, {3.7971459798329887`*^9, 3.797145983093239*^9}, {
+  3.79714609430897*^9, 3.7971461195471687`*^9}, {3.797146299253282*^9, 
+  3.797146419628447*^9}, {3.797146584820606*^9, 3.797146652129312*^9}, {
+  3.79714725311133*^9, 3.797147357768071*^9}, {3.797147887337679*^9, 
+  3.79714788761926*^9}, {3.797748933762443*^9, 
+  3.7977489495444183`*^9}},ExpressionUUID->"2e177b5c-923c-43fa-991b-\
+70c1f65a9f47"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General","compat",
+   "\"Combinatorica Graph and Permutations functionality has been superseded \
+by preloaded functionality. The package now being loaded may conflict with \
+this. Please see the Compatibility Guide for details.\"",2,189,27,
+   32955516262968205645,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.7971459837702417`*^9, 3.7971461032621603`*^9, 
+  3.7971462483760157`*^9, 3.797146655740899*^9, 3.7971473631742373`*^9, 
+  3.797147432560162*^9, 3.797147681032157*^9, 3.797147890975348*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"bd77faec-fe65-4c59-9388-2986b84fc14c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}]}], "}"}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}, {0, 1}, {1, 0}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891037055*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"f5223c52-5746-46a5-962e-fbbf28029e29"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 0}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971478910495863`*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"245d76cb-f662-4ccc-bb44-82b9f196124f"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}, {0, 1}}, {{1, 0}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891062557*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"91f22ff1-92a1-42de-82af-dc494b8fe494"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}, {1, 1}}, {{0, 1}, {1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891079465*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"5b6dfe27-d81e-42b7-a705-cdbbee868eab"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971478910967197`*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"6edc972b-0b2e-472e-8792-dd6cdfa619d2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891119544*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"57554b34-2768-42ea-a48f-9af75dba7d76"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 0}}, {{1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891140369*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"ceb49334-7841-47ce-9865-4da12d210219"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971478911603403`*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"a99ef414-cc49-4f71-86dc-185b46c203b0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm["Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}}, {{1, 1}}}],
+  
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147891241791*^9},
+ CellLabel->
+  "During evaluation of \
+In[187]:=",ExpressionUUID->"f2421bce-71a7-460e-ad6c-244b105f8aed"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"G", "[", 
+  RowBox[{"2", ",", "3"}], "]"}]], "Input",
+ CellChangeTimes->{{3.7971479181906033`*^9, 3.797147923021921*^9}},
+ CellLabel->
+  "In[190]:=",ExpressionUUID->"bd016b84-91b0-4574-89cb-d33d915e52b2"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General","compat",
+   "\"Combinatorica Graph and Permutations functionality has been superseded \
+by preloaded functionality. The package now being loaded may conflict with \
+this. Please see the Compatibility Guide for details.\"",2,190,28,
+   32955516262968205645,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.797147923961336*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"8e4df5cd-1937-4392-9126-260322cd902c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}]}], "}"}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147924033022*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"4633eafa-ebe8-43fe-82e2-98459e447730"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147924052025*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"3e4eb12d-c1c5-4f8d-9eae-1eee13aa1c3d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}, {0, 2}}, {{1, 0}, {1, 1}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479241042347`*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"05395278-47ed-437e-89e8-f4c565552ee1"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {0, 2}, {1, 1}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147924260899*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"e92da22c-0619-4a75-b4d3-11f4bb86559a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}}, {{1, 0}, {1, 1}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479246622057`*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"919facad-f209-44da-856c-6f528d349b5d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {1, 1}, {1, 2}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479248311157`*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"315c5423-bcd5-4d4a-99e9-8418da6aaeb4"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {1, 1}}, {{0, 2}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147928315827*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"b3e63c0f-23e2-4c88-899a-92143b6fd35e"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{0, 2}}, {{1, 0}, {1, 1}, {1, 
+    2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147928401732*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"8c490465-17d8-439a-880e-9f6bb143afe9"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}}, {{1, 0}}, {{1, 1}, {1, 
+    2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.79714792891573*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"621d407c-6540-4f34-bf77-cb8dcba8d4de"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}}, {{0, 2}, {1, 2}}, {{1, 
+    0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479300973597`*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"aa62cfb5-f21a-4032-8fa9-4ff92ec182fa"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{0, 2}}, {{1, 0}}, {{1, 1}}, {{1,
+    2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147934369699*^9},
+ CellLabel->
+  "During evaluation of \
+In[190]:=",ExpressionUUID->"6f47e1a1-3f83-4e1f-88bc-b2a78dbfaf22"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"G", "[", 
+  RowBox[{"3", ",", "2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.7971479283672028`*^9, 3.797147939346014*^9}},
+ CellLabel->
+  "In[191]:=",ExpressionUUID->"9df6aaed-dd35-4d43-90e3-b79994423ba0"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General","compat",
+   "\"Combinatorica Graph and Permutations functionality has been superseded \
+by preloaded functionality. The package now being loaded may conflict with \
+this. Please see the Compatibility Guide for details.\"",2,191,29,
+   32955516262968205645,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.797147940365663*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"64c0dc13-4a3f-4f00-8c5a-0dac7ef30fb6"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "1"}], "}"}]}], "}"}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147940442236*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"eb2896ca-816d-4ec0-9d31-6d8e72c62f2a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 0}, {1, 1}, {2, 0}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147940463612*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"1f1eecac-0ba9-41dc-afd0-58534054560d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}}, {{1, 0}, {1, 1}, {2, 0}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147940487297*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"f847f4cc-7cf3-40e5-a5dd-988e2fbb02f0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}, {2, 0}}, {{0, 1}, {1, 1}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479409870234`*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"37dc98af-c1c9-46e5-90f0-ea1c5b693100"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}, {1, 1}, {2, 0}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147941027051*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"0cc8bc90-67ef-4ba9-a9a4-5e639ca6e9ea"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}, {2, 1}}, {{1, 0}, {2, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147941598815*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"8c566bce-3582-46d1-9bc5-750e362aa8d0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}}, {{1, 0}, {1, 1}}, {{2, 0}, {2, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479417587957`*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"f9b3ba23-fa43-44c9-afbc-3ebbd0ef189b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}, {1, 1}}, {{2, 0}, {2, 
+    1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147944944333*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"15c45f1e-f5ee-4546-adbb-ce676c994784"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}, {2, 0}}, {{1, 1}, {2, 
+    1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147945333652*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"6d2ae312-fef4-4f60-a768-46ef2f21ac18"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}, {2, 1}}, {{1, 0}}, {{2, 
+    0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.7971479458854647`*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"92df6ede-b117-4bf3-9a1a-6f8a1cff287c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "1"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{1, 0}}, {{1, 1}}, {{2, 0}}, {{2,
+    1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147951073073*^9},
+ CellLabel->
+  "During evaluation of \
+In[191]:=",ExpressionUUID->"799eed27-4983-4663-b2e3-054595c71d9b"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"G", "[", 
+  RowBox[{"2", ",", "4"}], "]"}]], "Input",
+ CellChangeTimes->{{3.797147964107617*^9, 3.7971479684503508`*^9}},
+ CellLabel->
+  "In[193]:=",ExpressionUUID->"6adcb6b9-2a25-49c0-89b2-b93b89a6b81c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General","compat",
+   "\"Combinatorica Graph and Permutations functionality has been superseded \
+by preloaded functionality. The package now being loaded may conflict with \
+this. Please see the Compatibility Guide for details.\"",2,193,31,
+   32955516262968205645,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.7971479689137278`*^9, 3.797148259559684*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"fc8c27dc-ff13-45a4-90b2-119a102002e9"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "3"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3"}], "}"}]}], "}"}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {1, 0}, {1, 1}, {1, 
+   2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971482596164417`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"edb6198e-d35e-4028-ba38-50d0c130590c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}, {1, 0}, {1, 1}, {1,
+     2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148259649128*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"45dabe56-77ca-4fe0-8a64-e87c82906982"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}}, {{0, 1}, {0, 3}, {1, 0}, {1, 1}, {1,
+     2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148259829116*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"6387eacf-1bb5-454f-8f84-01aa714876cb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 1}, {0, 2}, {0, 3}}, {{1, 0}, {1, 1}, {1,
+    2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971482598550787`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"7bc50818-644f-47f3-8ea5-b16ff2461902"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {0, 2}, {0, 3}, {1, 1}, {1,
+     2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148260369067*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"04fc9fe0-1187-400d-83ce-39a7208f4a9a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 2}}, {{0, 1}, {0, 2}, {0, 3}, {1, 0}, {1,
+     1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148262579406*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"e572b8c4-82bc-47ef-ad89-03e15c12d189"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}, {1, 1}, {1, 3}}, {{0, 1}, {0, 3}, {1,
+    0}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148263249771*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"1fda8eb5-f38c-40f9-b96f-54b503bc1593"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}, {1, 0}, {1, 2}}, {{0, 1}, {0, 3}, {1,
+    1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148263490423*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"e8c4f3fe-cf3f-4b08-b770-24953fec17f3"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 0}, {1, 1}, {1, 2}, {1,
+     3}}, {{0, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148263710381*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"9e3be66f-662f-462a-8673-e4a4a87b2fe7"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}}, {{1, 0}, {1, 1}, {
+    1, 2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148263778528*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"427d5842-8d7f-451d-aa38-e60ddd7f15db"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}, {1, 1}, {1, 2}, {1,
+     3}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148264378591*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"9657d140-1be6-42e7-b1e2-2ef3192e21eb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}, {1, 0}, {1, 1}, {1,
+     3}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148267165566*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"63c4339e-52d6-4a18-a7f1-95a9b7bdea4d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 0}, {1, 2}}, {{0, 2}, {
+    1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148268049231*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"bd332b49-789c-4028-9ea0-a96b7888eb9a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{0, 2}, {
+    1, 0}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148268357067*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"f3c4f93f-0540-47be-8fbf-64bf6a5098b5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}}, {{0, 1}, {0, 3}}, {{1, 0}, {1, 1}, {
+    1, 2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971482758397293`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"c987749b-9615-4a6b-8502-301b84528ff8"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}}, {{0, 1}, {0, 3}, {1, 0}, {1, 2}}, {{
+    1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148284759615*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"6907f57c-6296-4c81-ba85-1b49877fdf6b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{
+    1, 0}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148285444375*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"6f0b69e8-7966-4bec-aae1-a19dec8719da"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 2}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{
+    0, 2}, {1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148316891016*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"c7a5ddb7-2456-4506-8eec-4c566dfb9d4e"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{
+    0, 2}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971483175755453`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"e1d0782a-689a-41a3-be6b-8b2e1c5e58af"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}}, {{0, 2}}, {{1, 0}, {1, 
+    1}, {1, 2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148344052494*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"f782a3bc-ee27-4ee1-b998-ace9158ed8ab"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 0}, {1, 2}}, {{0, 
+    2}}, {{1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148349666823*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"3be5d975-f471-407a-bb32-c1d99ca63fee"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{0, 
+    2}}, {{1, 0}, {1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148350096644*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"031d9ff1-9b9d-4d0f-bad0-31c04cf88e22"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}}, {{1, 0}}, {{1, 
+    1}, {1, 2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148350384197*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"42f022f7-9f53-4305-ac71-2c4287e4cb39"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 2}, {0, 3}}, {{1, 0}, {1, 1}, {
+    1, 3}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971483569247437`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"5b0790cc-1202-437b-9ca5-499e4e01e15c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 0}}, {{0, 2}, {1, 1}, {
+    1, 3}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148368157164*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"d05f4e4d-ac45-49bc-a9e6-1cdd0044f495"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{0, 2}, {
+    1, 0}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971483694706593`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"1882a5d2-fb02-4850-9ed7-38f604a20829"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{0, 2}, {
+    1, 2}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.79714836990688*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"188be815-3985-4de7-baa4-af80621488e0"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 2}}, {{0, 2}, {1, 1}, {
+    1, 3}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148371262471*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"74a20464-d69d-41b3-8388-2dd05f30a82c"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {0, 2}}, {{0, 1}, {0, 3}}, {{1, 0}, {1, 
+   2}}, {{1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971484505051537`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"dd203bed-4aab-4757-8586-e9c52b78ecfe"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 2}}, {{0, 1}, {1, 3}}, {{0, 2}, {1, 
+   0}}, {{0, 3}, {1, 1}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148562209071*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"fad448b7-f8b0-4aea-a3ae-5d056a7b47d5"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}, {1, 0}}, {{0, 1}, {1, 1}}, {{0, 2}, {1, 
+   2}}, {{0, 3}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148584247213*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"81d5f58c-a644-4327-8647-4238fd08cb53"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "3"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{0, 2}}, {{0, 3}}, {{1, 0}, {1, 
+    1}, {1, 2}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148584476269*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"e90e46bf-f4bb-4577-bc8d-90e0e280bfc1"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}}, {{0, 2}}, {{1, 0}, {1, 
+    2}}, {{1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148611060134*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"b60639ed-65d8-4073-b142-5968232f9515"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 1}, {1, 3}}, {{0, 
+    2}}, {{1, 0}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148618037489*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"7dd5b060-44af-46b2-9ed1-5d1ae459f6ff"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}, {1, 0}, {1, 2}}, {{0, 
+    2}}, {{1, 1}}, {{1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148622633514*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"858bc129-982d-41b6-84e5-a091c4a6d2bb"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 3}}, {{0, 2}, {1, 0}}, {{0, 
+    3}, {1, 1}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971486542494993`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"d1c859f4-9b24-47cb-99e2-f2b13ef13273"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}}, {{0, 2}, {1, 2}}, {{0, 
+    3}, {1, 3}}, {{1, 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.79714866279456*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"ecf4edcf-9b57-4abb-b88a-09a034e3a2ae"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "3"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{0, 2}}, {{0, 3}}, {{1, 0}, {1, 
+    2}}, {{1, 1}, {1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148808947207*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"182279e1-be53-4f87-8045-d1dc49376aa4"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}}, {{0, 2}}, {{1, 0}}, {{1, 
+    1}, {1, 3}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971488302455387`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"5f2ff442-ceed-481c-b011-2cfc66d46a6b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {0, 3}}, {{0, 2}}, {{1, 0}, {1, 
+    2}}, {{1, 1}}, {{1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.7971488331790237`*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"80a54df3-02c5-4e21-a631-6f5c1d913c3b"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 3}}, {{0, 2}}, {{0, 3}, {1, 
+    1}}, {{1, 0}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.79714883840943*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"9b5305c6-0e6c-4449-8a27-941589e146ad"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}, {1, 1}}, {{0, 2}}, {{0, 3}, {1, 
+    3}}, {{1, 0}}, {{1, 2}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148840988048*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"10779db7-3349-40d3-8049-2151cd42f705"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Friendly Labeling\"\>", "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "3"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3"}], "}"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Friendly Labeling", {{{0, 0}}, {{0, 1}}, {{0, 2}}, {{0, 3}}, {{1, 0}}, {{1,
+    1}}, {{1, 2}}, {{1, 3}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.797147968995631*^9, 3.797148897958127*^9},
+ CellLabel->
+  "During evaluation of \
+In[193]:=",ExpressionUUID->"2ebc1d71-fd18-497d-88e4-bdd9163bdbbd"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{755, 759},
+WindowMargins->{{Automatic, 32}, {Automatic, 113}},
+FrontEndVersion->"12.0 for Linux x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 591, 11, 55, "Input",ExpressionUUID->"9d973961-2d7d-4a01-b233-6e32139ce8a5"],
+Cell[CellGroupData[{
+Cell[1174, 35, 13899, 331, 1205, "Input",ExpressionUUID->"2e177b5c-923c-43fa-991b-70c1f65a9f47"],
+Cell[15076, 368, 664, 13, 62, "Message",ExpressionUUID->"bd77faec-fe65-4c59-9388-2986b84fc14c"],
+Cell[CellGroupData[{
+Cell[15765, 385, 666, 19, 25, "Print",ExpressionUUID->"f5223c52-5746-46a5-962e-fbbf28029e29"],
+Cell[16434, 406, 719, 21, 25, "Print",ExpressionUUID->"245d76cb-f662-4ccc-bb44-82b9f196124f"],
+Cell[17156, 429, 736, 22, 25, "Print",ExpressionUUID->"91f22ff1-92a1-42de-82af-dc494b8fe494"],
+Cell[17895, 453, 736, 22, 25, "Print",ExpressionUUID->"5b6dfe27-d81e-42b7-a705-cdbbee868eab"],
+Cell[18634, 477, 738, 22, 25, "Print",ExpressionUUID->"6edc972b-0b2e-472e-8792-dd6cdfa619d2"],
+Cell[19375, 501, 743, 22, 25, "Print",ExpressionUUID->"57554b34-2768-42ea-a48f-9af75dba7d76"],
+Cell[20121, 525, 743, 22, 25, "Print",ExpressionUUID->"ceb49334-7841-47ce-9865-4da12d210219"],
+Cell[20867, 549, 745, 22, 25, "Print",ExpressionUUID->"a99ef414-cc49-4f71-86dc-185b46c203b0"],
+Cell[21615, 573, 753, 23, 25, "Print",ExpressionUUID->"f2421bce-71a7-460e-ad6c-244b105f8aed"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22417, 602, 228, 5, 31, "Input",ExpressionUUID->"bd016b84-91b0-4574-89cb-d33d915e52b2"],
+Cell[22648, 609, 496, 11, 62, "Message",ExpressionUUID->"8e4df5cd-1937-4392-9126-260322cd902c"],
+Cell[CellGroupData[{
+Cell[23169, 624, 815, 24, 25, "Print",ExpressionUUID->"4633eafa-ebe8-43fe-82e2-98459e447730"],
+Cell[23987, 650, 870, 26, 25, "Print",ExpressionUUID->"3e4eb12d-c1c5-4f8d-9eae-1eee13aa1c3d"],
+Cell[24860, 678, 891, 27, 25, "Print",ExpressionUUID->"05395278-47ed-437e-89e8-f4c565552ee1"],
+Cell[25754, 707, 889, 27, 25, "Print",ExpressionUUID->"e92da22c-0619-4a75-b4d3-11f4bb86559a"],
+Cell[26646, 736, 917, 28, 25, "Print",ExpressionUUID->"919facad-f209-44da-856c-6f528d349b5d"],
+Cell[27566, 766, 898, 27, 25, "Print",ExpressionUUID->"315c5423-bcd5-4d4a-99e9-8418da6aaeb4"],
+Cell[28467, 795, 934, 29, 25, "Print",ExpressionUUID->"b3e63c0f-23e2-4c88-899a-92143b6fd35e"],
+Cell[29404, 826, 927, 29, 25, "Print",ExpressionUUID->"8c490465-17d8-439a-880e-9f6bb143afe9"],
+Cell[30334, 857, 945, 30, 25, "Print",ExpressionUUID->"621d407c-6540-4f34-bf77-cb8dcba8d4de"],
+Cell[31282, 889, 948, 30, 25, "Print",ExpressionUUID->"aa62cfb5-f21a-4032-8fa9-4ff92ec182fa"],
+Cell[32233, 921, 959, 30, 25, "Print",ExpressionUUID->"6f47e1a1-3f83-4e1f-88bc-b2a78dbfaf22"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33241, 957, 228, 5, 31, "Input",ExpressionUUID->"9df6aaed-dd35-4d43-90e3-b79994423ba0"],
+Cell[33472, 964, 496, 11, 62, "Message",ExpressionUUID->"64c0dc13-4a3f-4f00-8c5a-0dac7ef30fb6"],
+Cell[CellGroupData[{
+Cell[33993, 979, 815, 24, 25, "Print",ExpressionUUID->"eb2896ca-816d-4ec0-9d31-6d8e72c62f2a"],
+Cell[34811, 1005, 870, 26, 25, "Print",ExpressionUUID->"1f1eecac-0ba9-41dc-afd0-58534054560d"],
+Cell[35684, 1033, 889, 27, 25, "Print",ExpressionUUID->"f847f4cc-7cf3-40e5-a5dd-988e2fbb02f0"],
+Cell[36576, 1062, 891, 27, 25, "Print",ExpressionUUID->"37dc98af-c1c9-46e5-90f0-ea1c5b693100"],
+Cell[37470, 1091, 896, 27, 25, "Print",ExpressionUUID->"0cc8bc90-67ef-4ba9-a9a4-5e639ca6e9ea"],
+Cell[38369, 1120, 915, 28, 25, "Print",ExpressionUUID->"8c566bce-3582-46d1-9bc5-750e362aa8d0"],
+Cell[39287, 1150, 936, 29, 25, "Print",ExpressionUUID->"f9b3ba23-fa43-44c9-afbc-3ebbd0ef189b"],
+Cell[40226, 1181, 946, 30, 25, "Print",ExpressionUUID->"15c45f1e-f5ee-4546-adbb-ce676c994784"],
+Cell[41175, 1213, 946, 30, 25, "Print",ExpressionUUID->"6d2ae312-fef4-4f60-a768-46ef2f21ac18"],
+Cell[42124, 1245, 929, 29, 25, "Print",ExpressionUUID->"92df6ede-b117-4bf3-9a1a-6f8a1cff287c"],
+Cell[43056, 1276, 959, 30, 25, "Print",ExpressionUUID->"799eed27-4983-4663-b2e3-054595c71d9b"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44064, 1312, 228, 5, 31, "Input",ExpressionUUID->"6adcb6b9-2a25-49c0-89b2-b93b89a6b81c"],
+Cell[44295, 1319, 520, 11, 62, "Message",ExpressionUUID->"fc8c27dc-ff13-45a4-90b2-119a102002e9"],
+Cell[CellGroupData[{
+Cell[44840, 1334, 989, 29, 25, "Print",ExpressionUUID->"edb6198e-d35e-4028-ba38-50d0c130590c"],
+Cell[45832, 1365, 1047, 31, 25, "Print",ExpressionUUID->"45dabe56-77ca-4fe0-8a64-e87c82906982"],
+Cell[46882, 1398, 1066, 32, 25, "Print",ExpressionUUID->"6387eacf-1bb5-454f-8f84-01aa714876cb"],
+Cell[47951, 1432, 1067, 32, 25, "Print",ExpressionUUID->"7bc50818-644f-47f3-8ea5-b16ff2461902"],
+Cell[49021, 1466, 1066, 32, 25, "Print",ExpressionUUID->"04fc9fe0-1187-400d-83ce-39a7208f4a9a"],
+Cell[50090, 1500, 1066, 32, 25, "Print",ExpressionUUID->"e572b8c4-82bc-47ef-ad89-03e15c12d189"],
+Cell[51159, 1534, 1065, 32, 25, "Print",ExpressionUUID->"1fda8eb5-f38c-40f9-b96f-54b503bc1593"],
+Cell[52227, 1568, 1065, 32, 25, "Print",ExpressionUUID->"e8c4f3fe-cf3f-4b08-b770-24953fec17f3"],
+Cell[53295, 1602, 1073, 32, 48, "Print",ExpressionUUID->"9e3be66f-662f-462a-8673-e4a4a87b2fe7"],
+Cell[54371, 1636, 1092, 33, 48, "Print",ExpressionUUID->"427d5842-8d7f-451d-aa38-e60ddd7f15db"],
+Cell[55466, 1671, 1073, 32, 48, "Print",ExpressionUUID->"9657d140-1be6-42e7-b1e2-2ef3192e21eb"],
+Cell[56542, 1705, 1073, 32, 48, "Print",ExpressionUUID->"63c4339e-52d6-4a18-a7f1-95a9b7bdea4d"],
+Cell[57618, 1739, 1092, 33, 48, "Print",ExpressionUUID->"bd332b49-789c-4028-9ea0-a96b7888eb9a"],
+Cell[58713, 1774, 1092, 33, 48, "Print",ExpressionUUID->"f3c4f93f-0540-47be-8fbf-64bf6a5098b5"],
+Cell[59808, 1809, 1113, 34, 48, "Print",ExpressionUUID->"c987749b-9615-4a6b-8502-301b84528ff8"],
+Cell[60924, 1845, 1111, 34, 48, "Print",ExpressionUUID->"6907f57c-6296-4c81-ba85-1b49877fdf6b"],
+Cell[62038, 1881, 1111, 34, 48, "Print",ExpressionUUID->"6f0b69e8-7966-4bec-aae1-a19dec8719da"],
+Cell[63152, 1917, 1111, 34, 48, "Print",ExpressionUUID->"c7a5ddb7-2456-4506-8eec-4c566dfb9d4e"],
+Cell[64266, 1953, 1113, 34, 48, "Print",ExpressionUUID->"e1d0782a-689a-41a3-be6b-8b2e1c5e58af"],
+Cell[65382, 1989, 1118, 34, 48, "Print",ExpressionUUID->"f782a3bc-ee27-4ee1-b998-ace9158ed8ab"],
+Cell[66503, 2025, 1118, 34, 48, "Print",ExpressionUUID->"3be5d975-f471-407a-bb32-c1d99ca63fee"],
+Cell[67624, 2061, 1118, 34, 48, "Print",ExpressionUUID->"031d9ff1-9b9d-4d0f-bad0-31c04cf88e22"],
+Cell[68745, 2097, 1118, 34, 48, "Print",ExpressionUUID->"42f022f7-9f53-4305-ac71-2c4287e4cb39"],
+Cell[69866, 2133, 1120, 34, 48, "Print",ExpressionUUID->"5b0790cc-1202-437b-9ca5-499e4e01e15c"],
+Cell[70989, 2169, 1118, 34, 48, "Print",ExpressionUUID->"d05f4e4d-ac45-49bc-a9e6-1cdd0044f495"],
+Cell[72110, 2205, 1120, 34, 48, "Print",ExpressionUUID->"1882a5d2-fb02-4850-9ed7-38f604a20829"],
+Cell[73233, 2241, 1117, 34, 48, "Print",ExpressionUUID->"188be815-3985-4de7-baa4-af80621488e0"],
+Cell[74353, 2277, 1118, 34, 48, "Print",ExpressionUUID->"74a20464-d69d-41b3-8388-2dd05f30a82c"],
+Cell[75474, 2313, 1157, 36, 48, "Print",ExpressionUUID->"dd203bed-4aab-4757-8586-e9c52b78ecfe"],
+Cell[76634, 2351, 1155, 36, 48, "Print",ExpressionUUID->"fad448b7-f8b0-4aea-a3ae-5d056a7b47d5"],
+Cell[77792, 2389, 1155, 36, 48, "Print",ExpressionUUID->"81d5f58c-a644-4327-8647-4238fd08cb53"],
+Cell[78950, 2427, 1125, 34, 48, "Print",ExpressionUUID->"e90e46bf-f4bb-4577-bc8d-90e0e280bfc1"],
+Cell[80078, 2463, 1163, 36, 48, "Print",ExpressionUUID->"b60639ed-65d8-4073-b142-5968232f9515"],
+Cell[81244, 2501, 1125, 34, 48, "Print",ExpressionUUID->"7dd5b060-44af-46b2-9ed1-5d1ae459f6ff"],
+Cell[82372, 2537, 1125, 34, 48, "Print",ExpressionUUID->"858bc129-982d-41b6-84e5-a091c4a6d2bb"],
+Cell[83500, 2573, 1165, 36, 48, "Print",ExpressionUUID->"d1c859f4-9b24-47cb-99e2-f2b13ef13273"],
+Cell[84668, 2611, 1162, 36, 48, "Print",ExpressionUUID->"ecf4edcf-9b57-4abb-b88a-09a034e3a2ae"],
+Cell[85833, 2649, 1170, 36, 48, "Print",ExpressionUUID->"182279e1-be53-4f87-8045-d1dc49376aa4"],
+Cell[87006, 2687, 1172, 36, 48, "Print",ExpressionUUID->"5f2ff442-ceed-481c-b011-2cfc66d46a6b"],
+Cell[88181, 2725, 1172, 36, 48, "Print",ExpressionUUID->"80a54df3-02c5-4e21-a631-6f5c1d913c3b"],
+Cell[89356, 2763, 1169, 36, 48, "Print",ExpressionUUID->"9b5305c6-0e6c-4449-8a27-941589e146ad"],
+Cell[90528, 2801, 1170, 36, 48, "Print",ExpressionUUID->"10779db7-3349-40d3-8049-2151cd42f705"],
+Cell[91701, 2839, 1183, 36, 48, "Print",ExpressionUUID->"2ebc1d71-fd18-497d-88e4-bdd9163bdbbd"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
